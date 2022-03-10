@@ -1,8 +1,9 @@
 package valencia.corporation;
+import models.Doctor;
 
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+	    Doctor d = new Doctor("Daniel", "Ávila", "Ginecólogo");
     }
 }
