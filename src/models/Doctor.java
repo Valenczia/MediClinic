@@ -17,16 +17,6 @@ public class Doctor {
     public String surname;
     public String speciality;
 
-    /*
-    static {
-        try {
-            reload();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
     public Doctor() {}
 
     public Doctor(String firstName, String surname, String speciality) {
