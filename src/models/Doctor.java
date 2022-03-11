@@ -2,6 +2,7 @@ package models;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -48,7 +49,6 @@ public class Doctor {
     }
 
     public static Doctor find(int id) throws Exception {
-        //id.toString()
         for (int i = 0; i < all().size(); i++) {
             Doctor instance = all().get(i);
             if (instance.id == id) {
@@ -56,6 +56,17 @@ public class Doctor {
             }
         }
         return new Doctor();
+    }
+
+    private static int nextAvailableId() throws Exception {
+        int higher = 0;
+        for (int i = 0; i < all().size(); i++) {
+            Doctor instance = all().get(i);
+            if (higher < instance.id) {
+                higher = instance.id;
+            }
+        }
+        return higher + 1;
     }
 
     private static void reload() throws Exception {
@@ -77,6 +88,18 @@ public class Doctor {
     }
 
     public void save() throws Exception {
-
+        File file = new File("src/db/doctors.csv");
+        FileWriter pw = new FileWriter(file.getAbsolutePath(), true);
+        if (this.persisted == false) {
+            pw.append(Integer.toString(Doctor.nextAvailableId()) + ",");
+        } else {
+            pw.append(this.id + ",");
+        }
+        pw.append(this.firstName + ",");
+        pw.append(this.surname + ",");
+        pw.append(this.speciality);
+        pw.append("\n");
+        pw.flush();
+        pw.close();
     }
 }

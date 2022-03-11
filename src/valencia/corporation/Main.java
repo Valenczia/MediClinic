@@ -7,5 +7,7 @@ public class Main {
         Doctor d = Doctor.find(2);
         System.out.println(d.fullName());
         System.out.println(d.speciality);
+        Doctor x = new Doctor("Violeta", "Valencia", "Nini");
+        x.save();
     }
 }
