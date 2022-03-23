@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Doctor {
@@ -16,6 +17,8 @@ public class Doctor {
     public String firstName;
     public String surname;
     public String speciality;
+
+    private final static String databasePath = "src/db/doctors.csv";
 
     public Doctor() {}
 
@@ -62,7 +65,7 @@ public class Doctor {
     private static void reload() throws Exception {
         String line = "";
         String delimiter = ",";
-        File file = new File("src/db/doctors.csv");
+        File file = new File(databasePath);
         BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
         all.clear();
         while ((line = br.readLine()) != null) {
@@ -77,19 +80,45 @@ public class Doctor {
         return all;
     }
 
+    public void delete() throws Exception {
+        if (!this.persisted)
+            return;
+        File file = new File(databasePath);
+        File tempFile = new File(file.getAbsolutePath() + ".tmp");
+        BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+        PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+        String line = null;
+
+        while ((line = br.readLine()) != null) {
+            if (!line.split(",")[0].equals(Integer.toString(this.id))) {
+                pw.println(line);
+                pw.flush();
+            }
+        }
+
+        pw.close();
+        br.close();
+        file.delete();
+        tempFile.renameTo(file);
+    }
+
     public void save() throws Exception {
-        File file = new File("src/db/doctors.csv");
+        this.delete();
+        File file = new File(databasePath);
         FileWriter pw = new FileWriter(file.getAbsolutePath(), true);
         if (this.persisted == false) {
-            pw.append(Integer.toString(Doctor.nextAvailableId()) + ",");
-        } else {
-            pw.append(this.id + ",");
+            this.id = Doctor.nextAvailableId();
         }
+        pw.append(this.id + ",");
         pw.append(this.firstName + ",");
         pw.append(this.surname + ",");
         pw.append(this.speciality);
         pw.append("\n");
         pw.flush();
         pw.close();
+    }
+
+    public String toString() {
+        return this.id + ", " + this.firstName + ", " + this.surname + ", " + this.speciality;
     }
 }
