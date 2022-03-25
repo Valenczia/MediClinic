@@ -7,28 +7,25 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Doctor extends ModelBase {
-    private static List<Doctor> all = new ArrayList<Doctor>();
-    private final static String databasePath = "src/db/doctors.csv";
+public class Patient extends ModelBase {
+    private static List<Patient> all = new ArrayList<Patient>();
+    private final static String databasePath = "src/db/patients.csv";
 
     private boolean persisted = false;
     public String firstName;
     public String surname;
-    public String speciality;
 
-    public Doctor() {}
+    public Patient() {}
 
-    public Doctor(String firstName, String surname, String speciality) {
+    public Patient(String firstName, String surname) {
         this.firstName = firstName;
         this.surname = surname;
-        this.speciality = speciality;
     }
 
-    public Doctor(int id, String firstName, String surname, String speciality) {
+    public Patient(int id, String firstName, String surname) {
         this.id = id;
         this.firstName = firstName;
         this.surname = surname;
-        this.speciality = speciality;
         this.persisted = true;
     }
 
@@ -36,20 +33,20 @@ public class Doctor extends ModelBase {
         return firstName + " " + surname;
     }
 
-    public static Doctor find(int id) throws Exception {
+    public static Patient find(int id) throws Exception {
         for (int i = 0; i < all().size(); i++) {
-            Doctor instance = all().get(i);
+            Patient instance = all().get(i);
             if (instance.id == id) {
                 return instance;
             }
         }
-        return new Doctor();
+        return new Patient();
     }
 
     private static int nextAvailableId() throws Exception {
         int higher = 0;
         for (int i = 0; i < all().size(); i++) {
-            Doctor instance = all().get(i);
+            Patient instance = all().get(i);
             if (higher < instance.id) {
                 higher = instance.id;
             }
@@ -65,18 +62,14 @@ public class Doctor extends ModelBase {
         all.clear();
         while ((line = br.readLine()) != null) {
             String[] row = line.split(delimiter);
-            Doctor d = new Doctor(Integer.parseInt(row[0]), row[1], row[2], row[3]);
+            Patient d = new Patient(Integer.parseInt(row[0]), row[1], row[2]);
             all.add(d);
         }
     }
 
-    public static List<Doctor> all() throws Exception {
+    public static List<Patient> all() throws Exception {
         reload();
         return all;
-    }
-
-    public boolean persisted() {
-        return this.persisted;
     }
 
     public void delete() throws Exception {
@@ -106,18 +99,17 @@ public class Doctor extends ModelBase {
         File file = new File(databasePath);
         FileWriter pw = new FileWriter(file.getAbsolutePath(), true);
         if (this.persisted == false) {
-            this.id = Doctor.nextAvailableId();
+            this.id = Patient.nextAvailableId();
         }
         pw.append(this.id + ",");
         pw.append(this.firstName + ",");
         pw.append(this.surname + ",");
-        pw.append(this.speciality);
         pw.append("\n");
         pw.flush();
         pw.close();
     }
 
     public String toString() {
-        return this.id + ", " + this.firstName + ", " + this.surname + ", " + this.speciality;
+        return this.id + ", " + this.firstName + ", " + this.surname + ", ";
     }
 }

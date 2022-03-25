@@ -1,13 +1,14 @@
 package valencia.corporation;
+import java.util.Scanner;
+import lib.Login;
+import lib.Menu;
 import models.Doctor;
+import models.User;
 
 public class Main {
-
     public static void main(String[] args) throws Exception {
-        Doctor doctor = new Doctor("Carlos", "Mireles", "Pediatra");
-        doctor.save();
-        System.out.println(doctor.toString());
-        // Doctor.all().get(0).delete();
-        System.out.println("Cuantos doctores hay: " + Doctor.all().size());
+        Menu.printWelcome();
+        Login.authenticate();
+        Menu.main();
     }
 }

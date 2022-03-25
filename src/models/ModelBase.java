@@ -1,4 +1,5 @@
 package models;
 
-public class ModelBase {
+public abstract class ModelBase {
+  public int id;
 }
