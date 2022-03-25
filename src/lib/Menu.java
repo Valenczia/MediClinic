@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import models.Doctor;
 import models.Patient;
+import models.Appointment;
 
 public class Menu {
   private static String ask(String text) {
@@ -33,6 +34,8 @@ public class Menu {
       printCrud("doctor");
     } else if (select.equals("2")) {
       printCrud("patient");
+    } else if (select.equals("3")) {
+      printCrud("appointment");
     }
     main();
   }
@@ -68,12 +71,19 @@ public class Menu {
         System.out.println(patient.toString());
         System.out.println("----------------------");
       });
+    } else if (model.equals("appointment")) {
+      System.out.println("\n----------------------");
+      Appointment.all().forEach((appointment) -> {
+        System.out.println(appointment.toString());
+        System.out.println("----------------------");
+      });
     }
     System.out.println("");
   }
 
   private static void create(String model) throws Exception {
-    String firstName, surname, speciality;
+    String firstName, surname, speciality, year, month, day, hour, minute;
+    Integer doctorId, patientId;
     if (model.equals("doctor")) {
       firstName = ask("Nombre: ");
       surname = ask("Apellido: ");
@@ -89,6 +99,19 @@ public class Menu {
       patient.save();
       System.out.println("\nSe creo satisfactoriamente el paciente:");
       System.out.println(patient.toString() + "\n");
+    } else if (model.equals("appointment")) {
+      doctorId = Integer.parseInt(ask("Id de doctor: "));
+      patientId = Integer.parseInt(ask("Id de paciente: "));
+      year = ask("Año: ");
+      month = ask("Mes: ");
+      day = ask("Día: ");
+      hour = ask("Hora (formato 24 horas): ");
+      minute = ask("Minutos: ");
+      String datetime = day + "/" + month + "/" + year + "-" + hour + ":" + minute;
+      Appointment appointment = new Appointment(doctorId, patientId, datetime);
+      appointment.save();
+      System.out.println("\nSe creo satisfactoriamente la cita:");
+      System.out.println(appointment.toString() + "\n");
     }
   }
 
@@ -97,14 +120,20 @@ public class Menu {
       String id = ask("id: ");
       Doctor doctor = Doctor.find(Integer.parseInt(id));
       doctor.delete();
-      System.out.println("\nSe creo satisfactoriamente el doctor:");
+      System.out.println("\nSe eliminó satisfactoriamente el doctor:");
       System.out.println(doctor.toString() + "\n");
     } else if (model.equals("patient")) {
       String id = ask("id: ");
       Patient patient = Patient.find(Integer.parseInt(id));
       patient.delete();
-      System.out.println("\nSe creo satisfactoriamente el paciente:");
+      System.out.println("\nSe eliminó satisfactoriamente el paciente:");
       System.out.println(patient.toString() + "\n");
+    } else if (model.equals("appointment")) {
+      String id = ask("id: ");
+      Appointment appointment = Appointment.find(Integer.parseInt(id));
+      appointment.delete();
+      System.out.println("\nSe eliminó satisfactoriamente la cita:");
+      System.out.println(appointment.toString() + "\n");
     }
   }
 
@@ -116,6 +145,9 @@ public class Menu {
     } else if (model.equals("patient")) {
       Patient patient = Patient.find(id);
       System.out.println(patient.toString() + "\n");
+    } else if (model.equals("appointment")) {
+      Appointment appointment = Appointment.find(id);
+      System.out.println(appointment.toString() + "\n");
     }
   }
 }
